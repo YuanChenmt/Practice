@@ -1,0 +1,42 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def estimate_pi(N):
+    # Initialize empty lists for inside and outside points
+    inside_points = []
+    outside_points = []
+    
+    # Generate random points and calculate the distance
+    for _ in range(N):
+        x, y = np.random.uniform(-1, 1, 2)
+        distance = np.sqrt(x**2 + y**2)
+        if distance < 1:
+            inside_points.append([x, y])
+        else:
+            outside_points.append([x, y])
+    
+    # Convert lists to numpy arrays
+    inside_points = np.array(inside_points)
+    outside_points = np.array(outside_points)
+    
+    # Plotting
+    plt.figure(figsize=(6,6))
+    plt.scatter(inside_points[:, 0], inside_points[:, 1], color='red', s=1)
+    plt.scatter(outside_points[:, 0], outside_points[:, 1], color='blue', s=1)
+    plt.title(f"Plot for N = {N}")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.savefig(f"plot{N}.jpg")
+    
+    # Calculate pi
+    N_inside = len(inside_points)
+    N_outside = len(outside_points)
+    pi_approx = 4 * N_inside / (N_inside + N_outside)
+    print(f"For N = {N}, approximate value of π: {pi_approx}")
+    
+    return pi_approx
+
+if __name__ == "__main__":
+    N_values = [100, 1000, 10000]
+    for N in N_values:
+        estimate_pi(N)
