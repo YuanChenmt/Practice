@@ -1,0 +1,47 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# here theta is the x value, we plot 500 points in this case
+def graph1():
+    theta = np.linspace(0, 2*np.pi, 500)
+    # x and y functions
+    x = theta
+    y = theta * np.sin(np.exp(2.0 * theta))
+    plt.plot(x, y, label='Graph 1')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title('Graph1: y = θ sin(exp(2θ) * θ)')
+    plt.grid(True)
+    plt.show()
+
+def graph2():
+    theta = np.linspace(0, 2*np.pi, 500)
+    #x and y functions
+    x = np.sin(3 * theta)
+    y = (3/2) * np.cos(7 * theta)
+    plt.plot(x, y, label='Graph 2')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title('Graph2: Parametric equations')
+    plt.grid(True)
+    plt.show()
+
+def graph3():
+    theta = np.linspace(0, 2*np.pi, 500)
+    # set b value
+    b = -2
+    a_values = [-0.25, -0.35, -0.45]
+    for a in a_values:
+        y = a * theta**2 + b * theta
+        plt.plot(theta, y, label=f'a = {a}')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title('Graph3: Different curves for y = ax^2 + bx')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
+graph1()
+graph2()
+graph3()
