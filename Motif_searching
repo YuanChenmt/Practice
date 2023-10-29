@@ -1,0 +1,66 @@
+# Name: Yuan Chen
+# Description: This program reads motifs from motifs.txt and searches for their occurrences in protein sequences from human_aa_chr2_partial.txt. 
+# For each motif, it creates an output file and writes the sequences containing the motif. 
+# It also prints the number of occurrences of each motif and the number of sequences containing it.
+
+def read_motifs(filename):
+    with open(filename, 'r') as f:
+        return [line.strip() for line in f]
+
+def search_motif_in_sequence(motif, sequence):
+    index = sequence.find(motif)
+    if index != -1:
+        before = sequence[max(0, index-5):index]
+        after = sequence[index+len(motif):index+len(motif)+5]
+        return f"{before} {motif} {after}"
+    return None
+
+def process_sequences(motif, filename):
+    motif_count = 0
+    sequence_count = 0
+    results = []
+
+    with open(filename, 'r') as f:
+        sequence_name = ""
+        sequence_data = ""
+        for line in f:
+            line = line.strip()
+            if line.startswith(">"):
+                if sequence_name and sequence_data:
+                    result = search_motif_in_sequence(motif, sequence_data)
+                    if result:
+                        sequence_count += 1
+                        motif_count += sequence_data.count(motif)
+                        results.append(sequence_name + "\n" + result)
+                sequence_name = line
+                sequence_data = ""
+            else:
+                sequence_data += line
+
+        # Handle the last sequence
+        if sequence_name and sequence_data:
+            result = search_motif_in_sequence(motif, sequence_data)
+            if result:
+                sequence_count += 1
+                motif_count += sequence_data.count(motif)
+                results.append(sequence_name + "\n" + result)
+
+    return motif_count, sequence_count, results
+
+def main():
+    motifs = read_motifs("motifs.txt")
+    for motif in motifs:
+        motif_count, sequence_count, results = process_sequences(motif, "human_aa_chr2_partial.txt")
+        
+        with open(f"motif{motif}.txt", 'w') as f:
+            for result in results:
+                f.write(result + "\n\n")
+            f.write(f"# of motifs for {motif} : {motif_count}\n")
+            f.write(f"# of Sequences: {sequence_count}\n")
+        
+        print(f"For motif {motif}:")
+        print(f"# of motifs: {motif_count}")
+        print(f"# of Sequences: {sequence_count}\n")
+
+if __name__ == "__main__":
+    main()
