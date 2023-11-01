@@ -1,0 +1,49 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Constants given in the problem
+alpha = 0.0439
+K = 12000
+N0 = 4000
+target_N = 11000
+h = 0.05  # step size
+
+# The Gompertz differential equation model
+def gompertz(N, t):
+    return alpha * np.log(K / N) * N
+
+# Modified Euler Method (Heun's method)
+def modified_euler(f, N0, h, target_N):
+    t = 0
+    N = N0
+    while N < target_N:
+        # Predictor step (Euler's method)
+        N_euler = N + h * f(N, t)
+        # Corrector step (Heun's method)
+        N = N + h * (f(N, t) + f(N_euler, t + h)) / 2
+        t += h
+    return t, N
+
+# Solve the differential equation
+time_to_reach_target, N_final = modified_euler(gompertz, N0, h, target_N)
+
+print(f"The number of months it takes for the tumor to reach {target_N} cells is approximately {time_to_reach_target:.2f} months.")
+
+# To plot the results, we need to store the values at each step
+times = [0]
+cells = [N0]
+while cells[-1] < target_N:
+    t, N = modified_euler(gompertz, cells[-1], h, target_N)
+    times.append(t)
+    cells.append(N)
+
+# Plotting the results
+plt.plot(times, cells, label='N(t)')
+plt.axhline(y=target_N, color='r', linestyle='--', label='Target number of cells')
+plt.axvline(x=times[-1], color='g', linestyle='--', label='Time to reach target')
+plt.xlabel('Time (months)')
+plt.ylabel('Number of cells')
+plt.title('Tumor Growth Over Time')
+plt.legend()
+plt.grid(True)
+plt.show()
