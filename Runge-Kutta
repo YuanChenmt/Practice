@@ -1,0 +1,44 @@
+import numpy as np
+
+# Constants given in the problem
+k = 6.22e-19  # velocity constant
+n1 = n2 = 2e3  # initial amounts of K2Cr2O7 and H2O
+n3 = 3e3  # initial amount of S
+tf = 0.2  # final time (0.2 seconds)
+h = 1e-5  # step size for integration, can be adjusted for accuracy
+
+# Differential equation
+def reaction_rate(x, t):
+    return k * ((n1 - x)/2)**2 * ((n2 - x)/2)**2 * ((n3 - 3*x)/4)**3
+
+# Runge-Kutta method of order four (RK4)
+def rk4(f, x0, t0, tf, h):
+    n = int(np.ceil((tf - t0) / h))
+    t = np.linspace(t0, tf, n)
+    x = np.zeros(n)
+    x[0] = x0
+    for i in range(1, n):
+        k1 = h * f(x[i-1], t[i-1])
+        k2 = h * f(x[i-1] + 0.5 * k1, t[i-1] + 0.5 * h)
+        k3 = h * f(x[i-1] + 0.5 * k2, t[i-1] + 0.5 * h)
+        k4 = h * f(x[i-1] + k3, t[i-1] + h)
+        x[i] = x[i-1] + (k1 + 2*k2 + 2*k3 + k4) / 6
+    return t, x
+
+# Solve the differential equation
+t, x = rk4(reaction_rate, 0, 0, tf, h)
+
+# Amount of KOH formed after 0.2 seconds
+koh_formed = x[-1]
+print(f"Amount of KOH formed after 0.2 seconds: {koh_formed} units")
+
+# Plotting the results
+import matplotlib.pyplot as plt
+
+plt.plot(t, x, label='Amount of KOH')
+plt.xlabel('Time (s)')
+plt.ylabel('Amount of KOH (units)')
+plt.title('KOH Formation Over Time')
+plt.legend()
+plt.grid(True)
+plt.show()
