@@ -1,0 +1,60 @@
+import matplotlib.pyplot as plt
+import numpy as np
+from random import random
+
+# Function to draw a line segment
+def draw_line(x1, y1, x2, y2, lw, color):
+    plt.plot([x1, x2], [y1, y2], linewidth=lw, color=color)
+
+# Function to draw "sakura" (flowers)
+def draw_sakura(x, y, angle):
+    # Set a bright pink color
+    color = (1.0, 0.2, 1.0)  # Bright pink
+    plt.scatter(x, y, color=color, s=10)
+
+# Recursive function to draw the tree
+def draw_tree(x, y, angle, depth, length):
+    if depth > 0:
+        # Calculate the end point of the branch
+        x_end = x + length * np.cos(angle)
+        y_end = y + length * np.sin(angle)
+        
+        # The thickness of the branch is proportional to its depth
+        lw = depth / 3
+        
+        # Set the color of the branch based on its depth
+        t = np.cos(angle + np.pi / 4) / 8 + 0.25
+        color = (t, t, t)
+        
+        # Draw the branch
+        draw_line(x, y, x_end, y_end, lw, color)
+        
+        # Random angles for the next branches
+        b = random() * 15 + 10
+        c = random() * 15 + 10
+        
+        # Recursively draw the next branches
+        draw_tree(x_end, y_end, angle - np.radians(b), depth - 1, length * (random() * 0.25 + 0.7))
+        draw_tree(x_end, y_end, angle + np.radians(c), depth - 1, length * (random() * 0.25 + 0.7))
+    else:
+        # Draw sakura at the end of the smallest branches
+        draw_sakura(x, y, angle)
+
+# Initialize the plot
+plt.figure(figsize=(10, 10))
+plt.axis('off')
+
+# Set the initial position and angle
+x_start, y_start = 0, -1
+start_angle = np.pi / 2
+depth = 12
+length = 0.3
+
+# Draw the tree
+draw_tree(x_start, y_start, start_angle, depth, length)
+
+# Set the limits and display the plot
+plt.xlim(-2, 2)
+plt.ylim(-1, 1.5)
+plt.gca().set_aspect('equal', adjustable='box')
+plt.show()
