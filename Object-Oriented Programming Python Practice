@@ -1,0 +1,23 @@
+class BankAccount:
+    def __init__(self, startBalance, firstName, lastName):
+        self.balance = startBalance
+        self.firstName = firstName
+        self.lastName = lastName
+
+    def deposit(self, amount):
+        self.balance += amount
+
+    def withdraw(self, amount):
+        if amount <= self.balance:
+            self.balance -= amount
+        else:
+            print("Insufficient funds")
+
+    def setBalance(self, balance):
+        self.balance = balance
+
+    def getBalance(self):
+        return self.balance
+
+    def __str__(self):
+        return f"BankAccount({self.firstName} {self.lastName}, Balance: {self.balance})"
