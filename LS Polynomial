@@ -1,0 +1,63 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Data provided
+x = np.array([13, 15, 16, 21, 22, 23, 25, 29, 30, 31, 36, 40, 42, 55, 60, 62, 64, 70, 72, 100, 130])
+y = np.array([11, 10, 11, 12, 12, 13, 13, 12, 14, 16, 17, 13, 14, 22, 14, 21, 21, 24, 17, 23, 34])
+
+# Fit a second-degree polynomial to the data
+coefficients = np.polyfit(x, y, 2)
+polynomial = np.poly1d(coefficients)
+
+# Generate a sequence of x-values for plotting the polynomial curve
+x_poly = np.linspace(min(x), max(x), 100)
+y_poly = polynomial(x_poly)
+
+# Print the polynomial equation
+print("Fitted Polynomial Equation:")
+print("y = {:.6f}x² + {:.6f}x + {:.6f}".format(*coefficients))
+
+# Plotting
+plt.figure(figsize=(10, 6))
+plt.scatter(x, y, color='blue', label='Observed Data')
+plt.plot(x_poly, y_poly, color='red', label='Fitted Polynomial')
+plt.xlabel('Number of Fish (x)')
+plt.ylabel('Number of Species (y)')
+plt.title('Polynomial Regression: Number of Fish vs Number of Species')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+
+import numpy as np
+from scipy.stats import linregress
+import matplotlib.pyplot as plt
+
+# Data provided
+x = np.array([0.040, 0.041, 0.055, 0.056, 0.062, 0.071, 0.071, 0.078, 0.082, 
+              0.090, 0.092, 0.100, 0.105, 0.120, 0.123, 0.130, 0.140])
+y = np.array([26.5, 28.1, 25.2, 26.0, 24.0, 25.0, 26.4, 27.2, 25.6, 25.0, 
+              26.8, 24.8, 27.0, 25.0, 27.3, 26.9, 26.2])
+
+# Perform linear regression
+slope, intercept, r_value, p_value, std_err = linregress(x, y)
+
+# Print the linear equation
+print("Fitted Linear Equation:")
+print("y = {:.4f}x + {:.4f}".format(slope, intercept))
+
+# Generate a sequence of x-values for plotting the regression line
+x_model = np.linspace(min(x), max(x), 100)
+y_model = slope * x_model + intercept
+
+# Plotting
+plt.figure(figsize=(10, 6))
+plt.scatter(x, y, color='blue', label='Observed Data')
+plt.plot(x_model, y_model, color='red', label='Fitted Line')
+plt.xlabel('Thickness (cm)')
+plt.ylabel('Attenuation Coefficient (dB/cm)')
+plt.title('Linear Regression: Thickness vs Attenuation Coefficient')
+plt.legend()
+plt.grid(True)
+plt.show()
